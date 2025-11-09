@@ -26,7 +26,7 @@ export class AppController {
 
   @Get()
   getHello(): string {
-    console.log('Get hello');
+    console.log('Get hell');
     return this.appService.getHello();
   }
   @Get('/anime')
