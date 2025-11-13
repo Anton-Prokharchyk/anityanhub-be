@@ -29,6 +29,7 @@ export class AppController {
     console.log('Get hell');
     return this.appService.getHello();
   }
+
   @Get('/anime')
   getAnimes(): Anime[] {
     console.log('animes');
