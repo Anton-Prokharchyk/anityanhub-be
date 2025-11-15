@@ -7,21 +7,29 @@ import {
   Param,
   Delete,
 } from '@nestjs/common';
+
 import { AuthService } from './auth.service';
-import { CreateUserDto } from '../user/dto/create-user.dto';
+import { RegistrationUserDto } from './dto/register-user.dto';
+import { LoginUserDto } from './dto/login-user.dto';
+import { RegistrationReturnType } from './types';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('/registration')
-  registration(@Body() CreateUserDto: CreateUserDto) {
-    return this.authService.registration(CreateUserDto);
+  async registration(
+    @Body() registrationUserDto: RegistrationUserDto,
+  ): Promise<RegistrationReturnType> {
+    return await this.authService.registration(registrationUserDto);
   }
 
-  @Get()
-  findAll() {
-    return this.authService.findAll();
+  @Post('/login')
+  async login(
+    @Body() loginUserDto: LoginUserDto,
+  ): Promise<{ isLoggedIn: boolean }> {
+    const isLoggedIn = await this.authService.login(loginUserDto);
+    return { isLoggedIn };
   }
 
   @Get(':id')
