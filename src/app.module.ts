@@ -3,12 +3,9 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
 import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { AuthModule } from './auth/auth.module';
-import { UserModule } from './user/user.module';
+import { AuthModule } from './modules/auth/auth.module';
+import { UserModule } from './modules/users/users.module';
 import getMongoDbConfig from './configs/getMongoDbConfig';
-import { PrismaService } from './Prisma/prisma.service';
-import { CryptService } from './cryptService/crypt.service';
 
 @Module({
   imports: [
@@ -22,6 +19,6 @@ import { CryptService } from './cryptService/crypt.service';
     ConfigModule.forRoot({ isGlobal: true }),
   ],
   controllers: [AppController],
-  providers: [AppService, PrismaService, CryptService],
+  providers: [],
 })
 export class AppModule {}
