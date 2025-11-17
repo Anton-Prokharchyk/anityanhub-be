@@ -70,16 +70,6 @@ export class AuthService {
     return await this.jwtService.signToken({ ...payload });
   }
 
-  private async extractToken(@Headers('Authorization') authHeader: string) {
-    const [type, token] = authHeader.split(' ');
-    if (type !== 'Bearer' || !token)
-      throw new HttpException(
-        errorsMessages.authMsgs.INVALID_TOKEN_ERROR,
-        HttpStatus.UNAUTHORIZED,
-      );
-    return token;
-  }
-
   findOne(id: number) {
     return `This action returns a #${id} auth`;
   }
