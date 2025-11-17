@@ -1,19 +1,11 @@
-import {
-  Inject,
-  Injectable,
-  HttpStatus,
-  HttpException,
-  Headers,
-} from '@nestjs/common';
+import { Injectable, HttpStatus, HttpException } from '@nestjs/common';
 
 import { errorsMessages } from 'src/common/errors-messgaes.constants';
 import { RegistrationUserDto } from '../auth/dto/register-user.dto';
 import { UserService } from '../users/users.service';
 import ICryptService from 'src/common/services/crypt/cryptService.interface';
-import { CryptService } from 'src/common/services/crypt/crypt.service';
 import { LoginUserDto } from './dto/login-user.dto';
 import { User } from 'generated/prisma/client';
-import { JwtService } from 'src/common/services/jwt/jwt.service';
 import { IJwtService } from 'src/common/services/jwt/jwtService.interface';
 import { RegistrationReturnType } from './types';
 
@@ -68,16 +60,6 @@ export class AuthService {
 
   private async signToken(payload: User) {
     return await this.jwtService.signToken({ ...payload });
-  }
-
-  private async extractToken(@Headers('Authorization') authHeader: string) {
-    const [type, token] = authHeader.split(' ');
-    if (type !== 'Bearer' || !token)
-      throw new HttpException(
-        errorsMessages.authMsgs.INVALID_TOKEN_ERROR,
-        HttpStatus.UNAUTHORIZED,
-      );
-    return token;
   }
 
   findOne(id: number) {
