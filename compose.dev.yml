@@ -5,9 +5,64 @@ services:
     build:
       context: .
       target: dev
-    restart: always
+    restart: unless-stopped
+    depends_on:
+      ath-postgres:
+        condition: service_healthy
+      ath-mongodb:
+        condition: service_healthy
+    env_file:
+      - .env
     ports:
       - 3001:3000
     volumes:
       - ./:/ath-backend
       - /ath-backend/node_modules
+    networks:
+      - backend
+
+  ath-postgres:
+    image: postgres:latest
+    container_name: ath-postgres
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - 5433:${POSTGRES_PORT}
+    volumes:
+      - ath-postgres-data:/data/postgresdb
+    networks:
+      - backend
+
+  ath-mongodb:
+    image: mongo:latest
+    container_name: ath-mongodb
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - ath-mongodb-data:/data/mongodb
+    ports:
+      - 27018:${MONGO_PORT}
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge
+volumes:
+  ath-mongodb-data:
+    name: ath-mongodb-data
+  ath-postgres-data:
+    name: ath-postgres-data
