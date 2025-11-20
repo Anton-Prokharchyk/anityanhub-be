@@ -2,10 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcryptjs';
 
-import ICryptService from './cryptService.interface';
+import { ICryptAdapter } from './crypt.adapter.interface';
 
 @Injectable()
-export class CryptService implements ICryptService {
+export class CryptAdapter implements ICryptAdapter {
   constructor(private readonly configService: ConfigService) {}
   async compare(password: string, hash: string): Promise<boolean> {
     return await bcrypt.compare(password, hash);

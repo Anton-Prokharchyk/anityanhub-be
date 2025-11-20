@@ -3,12 +3,11 @@ import { Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { UserService } from '../users/users.service';
 import { AuthController } from './auth.controller';
-import { PrismaService } from 'src/common/services/prisma/prisma.service';
+import { PrismaService } from 'src/common/adapters/prisma/prisma.service';
 import { UserModule } from 'src/modules/users/users.module';
-import { CryptService } from 'src/common/services/crypt/crypt.service';
-import { JwtService } from 'src/common/services/jwt/jwt.service';
-import ICryptService from 'src/common/services/crypt/cryptService.interface';
-import { IJwtService } from 'src/common/services/jwt/jwtService.interface';
+import { CryptAdapter } from 'src/common/adapters/crypt/crypt.adapter';
+import { JwtAdapter } from 'src/common/adapters/jwt/jwt.adapter';
+import { CRYPT_LIB, JWT_LIB } from 'src/common/adapters/tokens';
 
 @Module({
   imports: [UserModule],
@@ -17,9 +16,8 @@ import { IJwtService } from 'src/common/services/jwt/jwtService.interface';
     AuthService,
     UserService,
     PrismaService,
-    { provide: IJwtService, useClass: JwtService },
-    { provide: ICryptService, useClass: CryptService },
-    { provide: 'JWT_LIB', useFactory: () => require('jsonwebtoken') },
+    { provide: CRYPT_LIB, useClass: CryptAdapter },
+    { provide: JWT_LIB, useClass: JwtAdapter },
   ],
 })
 export class AuthModule {}

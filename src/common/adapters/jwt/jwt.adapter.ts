@@ -1,19 +1,16 @@
-import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as jwt from 'jsonwebtoken';
 import type { StringValue } from 'ms';
 
 import { errorsMessages } from 'src/common/errors-messgaes.constants';
-import { IJwtService } from './jwtService.interface';
+import { IJwtAdapter } from './jwt.adapter.interface';
 
 @Injectable()
-export class JwtService implements IJwtService {
+export class JwtAdapter implements IJwtAdapter {
   private readonly secret: string;
   private readonly expiresIn: StringValue;
-  constructor(
-    private readonly configService: ConfigService,
-    @Inject('JWT_LIB') private readonly jwtLib: typeof jwt,
-  ) {
+  constructor(private readonly configService: ConfigService) {
     const secret = this.configService.get<string>('JWT_SECRET');
     console.log('JWT_SECRET:', secret);
     if (!secret) {
@@ -29,10 +26,10 @@ export class JwtService implements IJwtService {
 
   async signToken(payload: string | Buffer | object): Promise<string> {
     const options: jwt.SignOptions = { expiresIn: this.expiresIn };
-    return this.jwtLib.sign(payload, this.secret, options);
+    return jwt.sign(payload, this.secret, options);
   }
 
   async verifyToken(tokenToVerify: string): Promise<string | unknown> {
-    return this.jwtLib.verify(tokenToVerify, this.secret);
+    return jwt.verify(tokenToVerify, this.secret);
   }
 }

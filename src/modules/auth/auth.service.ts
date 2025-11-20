@@ -1,20 +1,21 @@
-import { Injectable, HttpStatus, HttpException } from '@nestjs/common';
+import { Injectable, HttpStatus, HttpException, Inject } from '@nestjs/common';
 
 import { errorsMessages } from 'src/common/errors-messgaes.constants';
 import { RegistrationUserDto } from '../auth/dto/register-user.dto';
 import { UserService } from '../users/users.service';
-import ICryptService from 'src/common/services/crypt/cryptService.interface';
 import { LoginUserDto } from './dto/login-user.dto';
 import { User } from 'generated/prisma/client';
-import { IJwtService } from 'src/common/services/jwt/jwtService.interface';
+import { IJwtAdapter } from 'src/common/adapters/jwt/jwt.adapter.interface';
 import { RegistrationReturnType } from './types';
+import { CRYPT_LIB, JWT_LIB } from 'src/common/adapters/tokens';
+import { ICryptAdapter } from 'src/common/adapters/crypt/crypt.adapter.interface';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly userService: UserService,
-    private readonly cryptService: ICryptService,
-    private readonly jwtService: IJwtService,
+    @Inject(CRYPT_LIB) private readonly cryptService: ICryptAdapter,
+    @Inject(JWT_LIB) private readonly jwtService: IJwtAdapter,
   ) {}
 
   async registration(
