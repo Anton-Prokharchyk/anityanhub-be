@@ -20,9 +20,8 @@ export class UserController {
     console.log('get user by id');
     try {
       const user = await this.userService.findUserById(id);
-
       if (!user) {
-        throw new HttpException('Product not found', 404);
+        throw new HttpException('User not found', 404);
       }
       return user;
     } catch (err) {
