@@ -18,6 +18,7 @@ services:
     volumes:
       - ./:/ath-backend
       - /ath-backend/node_modules
+      - /ath-backend/generated
     networks:
       - backend
 

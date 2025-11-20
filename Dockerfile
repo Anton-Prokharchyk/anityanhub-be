@@ -7,8 +7,7 @@ ADD package*.json ./
 FROM base AS dev
 RUN npm install
 ADD . .
-RUN npx prisma generate
-CMD ["sh", "-c", "npx prisma migrate deploy && npm run start:dev"]
+CMD ["sh", "-c", "npx prisma generate && npx prisma migrate deploy && npm run start:dev"]
 
 # --- build ---
 FROM base AS build

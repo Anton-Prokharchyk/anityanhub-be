@@ -8,11 +8,11 @@ import {
 import { Observable } from 'rxjs';
 
 import { errorsMessages } from '../errors-messgaes.constants';
-import { IJwtService } from '../services/jwt/jwtService.interface';
+import { IJwtAdapter } from '../adapters/jwt/jwt.adapter.interface';
 
 @Injectable()
 export class JwtGuard implements CanActivate {
-  constructor(private readonly JwtService: IJwtService) {}
+  constructor(private readonly JwtService: IJwtAdapter) {}
 
   canActivate(
     context: ExecutionContext,
