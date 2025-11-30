@@ -41,7 +41,7 @@ export class AuthService {
   }
 
   async login(loginUserDto: LoginUserDto): Promise<boolean> {
-    const user = await this.userService.findUserByName(loginUserDto.name);
+    const user = await this.userService.findUserByName(loginUserDto.login);
     if (!user)
       throw new HttpException(
         errorsMessages.authMsgs.WRONG_NAME_ERROR,
